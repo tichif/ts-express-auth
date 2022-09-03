@@ -1,9 +1,14 @@
 import { Router } from 'express';
 
 import validateResource from '../middleware/validateResource';
-import { createUserSchema, verifyUserSchema } from '../schema/user.schema';
+import {
+  createUserSchema,
+  verifyUserSchema,
+  forgotPasswordSchema,
+} from '../schema/user.schema';
 import {
   createUserHandle,
+  forgotPasswordHandler,
   verifyUserHandler,
 } from '../controllers/users.controller';
 
@@ -14,6 +19,11 @@ router.get(
   '/verify/:id/:verificationCode',
   validateResource(verifyUserSchema),
   verifyUserHandler
+);
+router.post(
+  '/forgotpassword',
+  validateResource(forgotPasswordSchema),
+  forgotPasswordHandler
 );
 
 export default router;

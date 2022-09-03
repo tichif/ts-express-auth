@@ -30,6 +30,17 @@ export const verifyUserSchema = object({
   }),
 });
 
+export const forgotPasswordSchema = object({
+  body: object({
+    email: string({
+      required_error: 'Email is required',
+    }).email('Not a valid email'),
+  }),
+});
+
 // create an zod interface
 export type CreateUserInterface = TypeOf<typeof createUserSchema>['body'];
 export type VerifyUserInterface = TypeOf<typeof verifyUserSchema>['params'];
+export type ForgotPasswordInterface = TypeOf<
+  typeof forgotPasswordSchema
+>['body'];
