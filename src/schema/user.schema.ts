@@ -23,5 +23,13 @@ export const createUserSchema = object({
   }),
 });
 
+export const verifyUserSchema = object({
+  params: object({
+    id: string(),
+    verificationCode: string(),
+  }),
+});
+
 // create an zod interface
 export type CreateUserInterface = TypeOf<typeof createUserSchema>['body'];
+export type VerifyUserInterface = TypeOf<typeof verifyUserSchema>['params'];

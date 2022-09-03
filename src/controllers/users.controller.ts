@@ -1,7 +1,10 @@
 import { Request, Response } from 'express';
 
-import { CreateUserInterface } from '../schema/user.schema';
-import { createUser } from '../services/user.services';
+import {
+  CreateUserInterface,
+  VerifyUserInterface,
+} from '../schema/user.schema';
+import { createUser, findUserById } from '../services/user.services';
 import sendEmail from '../utils/mailer';
 
 export async function createUserHandle(
@@ -28,4 +31,33 @@ export async function createUserHandle(
 
     return res.status(500).send(error);
   }
+}
+
+export async function verifyUserHandler(
+  req: Request<VerifyUserInterface>,
+  res: Response
+) {
+  const { id, verificationCode } = req.params;
+
+  // find the user with his id
+  const user = await findUserById(id);
+
+  if (!user) {
+    return res.status(404).send('Could not verify user.');
+  }
+
+  // check if he is already verified
+  if (user.verified) {
+    return res.status(403).send('User is already verified.');
+  }
+
+  // check to see if the verification code matches
+  if (user.verificationCode === verificationCode) {
+    user.verified = true;
+    await user.save();
+
+    return res.status(200).send('User successfully verified.');
+  }
+
+  return res.status(400).send('User cannot be verified');
 }
