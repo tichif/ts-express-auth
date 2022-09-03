@@ -10,6 +10,9 @@ const app = express();
 
 const PORT = config.get('port');
 
+// middleware
+app.use(express.json());
+
 // routes
 app.use(router);
 
