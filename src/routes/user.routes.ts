@@ -5,10 +5,12 @@ import {
   createUserSchema,
   verifyUserSchema,
   forgotPasswordSchema,
+  resetPasswordSchema,
 } from '../schema/user.schema';
 import {
   createUserHandle,
   forgotPasswordHandler,
+  resetPasswordHandler,
   verifyUserHandler,
 } from '../controllers/users.controller';
 
@@ -24,6 +26,11 @@ router.post(
   '/forgotpassword',
   validateResource(forgotPasswordSchema),
   forgotPasswordHandler
+);
+router.post(
+  '/resetpassword/:id/:passwordResetCode',
+  validateResource(resetPasswordSchema),
+  resetPasswordHandler
 );
 
 export default router;

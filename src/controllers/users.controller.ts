@@ -4,6 +4,7 @@ import { nanoid } from 'nanoid';
 import {
   CreateUserInterface,
   ForgotPasswordInterface,
+  ResetPasswordInterface,
   VerifyUserInterface,
 } from '../schema/user.schema';
 import {
@@ -103,4 +104,33 @@ export async function forgotPasswordHandler(
 
   log.debug(`Password reset email sent to ${user.email}`);
   return res.send(message);
+}
+
+export async function resetPasswordHandler(
+  req: Request<
+    ResetPasswordInterface['params'],
+    {},
+    ResetPasswordInterface['body']
+  >,
+  res: Response
+) {
+  const { id, passwordResetCode } = req.params;
+
+  const { password } = req.body;
+
+  const user = await findUserById(id);
+
+  if (
+    !user ||
+    !user.passwordReset ||
+    user.passwordReset !== passwordResetCode
+  ) {
+    return res.status(400).send('Could not reset user password');
+  }
+
+  user.passwordReset = null;
+  user.password = password;
+  await user.save();
+
+  return res.send('Password reset successfully.');
 }
