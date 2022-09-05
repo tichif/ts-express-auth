@@ -9,4 +9,6 @@ export default {
     port: 587,
     secure: false,
   },
+  accessTokenPrivateKey: '',
+  refreshTokenPrivateKey: '',
 };
